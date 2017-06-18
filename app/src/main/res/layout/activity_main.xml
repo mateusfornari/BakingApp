@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.example.android.bakingapp.MainActivity"
+        >
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rv_recipe_list" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/msg_error_internet"
+            android:visibility="invisible"
+            android:layout_gravity="center"
+            android:id="@+id/empty_recipes_view"
+            android:padding="@dimen/default_spacing"/>
+
+        <ProgressBar
+            android:layout_width="@dimen/progressbar_size"
+            android:layout_height="@dimen/progressbar_size"
+            android:layout_gravity="center"
+            android:id="@+id/loading_indicator"
+            android:visibility="invisible"/>
+    </FrameLayout>
+</layout>

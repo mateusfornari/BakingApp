@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">BakingApp</string>
+    <string name="msg_error_internet">You need internet connection for performing this request!</string>
+    <string name="item_recipe_ingredients">Recipe Ingredients</string>
+</resources>
