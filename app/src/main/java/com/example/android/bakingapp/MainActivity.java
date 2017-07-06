@@ -1,9 +1,12 @@
 package com.example.android.bakingapp;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.View;
@@ -18,12 +21,16 @@ import com.example.android.bakingapp.adapters.RecipeListAdapter;
 import com.example.android.bakingapp.databinding.ActivityMainBinding;
 import com.example.android.bakingapp.domain.Recipe;
 import com.example.android.bakingapp.utilities.JsonUtils;
+import com.example.android.bakingapp.utilities.RecipeLoader;
 
 import org.json.JSONArray;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements RecipeListAdapter.OnRecipeClickListener{
+public class MainActivity extends AppCompatActivity implements
+        RecipeListAdapter.OnRecipeClickListener,
+        RecipeLoader.OnLoadListener{
 
     private static final String LOG_TAG = "MainActivity";
 
@@ -41,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements RecipeListAdapter
         setContentView(R.layout.activity_main);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager layoutManager = new GridLayoutManager(this, getResources().getInteger(R.integer.grid_columns));
         mBinding.rvRecipeList.setLayoutManager(layoutManager);
 
         mRecipeAdapter = new RecipeListAdapter(this);
@@ -57,8 +64,6 @@ public class MainActivity extends AppCompatActivity implements RecipeListAdapter
         }
 
     }
-
-
 
     @Override
     public void onRecipeClick(Recipe recipe) {
@@ -78,31 +83,37 @@ public class MainActivity extends AppCompatActivity implements RecipeListAdapter
 
     private void loadRecipes(){
         mBinding.loadingIndicator.setVisibility(View.VISIBLE);
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        String url = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json";
-        JsonArrayRequest request = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
-            @Override
-            public void onResponse(JSONArray response) {
-                if(response != null){
-                    mBinding.emptyRecipesView.setVisibility(View.GONE);
-                    mBinding.rvRecipeList.setVisibility(View.VISIBLE);
-                    mRecipes = JsonUtils.fetchRecipeList(response);
-                    mRecipeAdapter.swapRecipes(mRecipes);
-                    mBinding.loadingIndicator.setVisibility(View.INVISIBLE);
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                mBinding.loadingIndicator.setVisibility(View.INVISIBLE);
-                mBinding.emptyRecipesView.setVisibility(View.VISIBLE);
-                mBinding.rvRecipeList.setVisibility(View.GONE);
-                Toast.makeText(getApplicationContext(), getString(R.string.msg_error_internet), Toast.LENGTH_LONG).show();
-                Log.d(LOG_TAG, "Erro: " + error.getMessage());
-            }
-        });
-        requestQueue.add(request);
+        RecipeLoader loader = new RecipeLoader(this, this);
+        loader.load();
     }
 
 
+    @Override
+    public void onLoaded(ArrayList<Recipe> data) {
+        if(data != null){
+            mBinding.emptyRecipesView.setVisibility(View.GONE);
+            mBinding.rvRecipeList.setVisibility(View.VISIBLE);
+            mRecipes = data;
+            mRecipeAdapter.swapRecipes(mRecipes);
+            mBinding.loadingIndicator.setVisibility(View.INVISIBLE);
+
+            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
+            int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this, BakingAppWidget.class));
+            //Trigger data update to handle the GridView widgets and force a data refresh
+            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_grid_view);
+            for(int id : appWidgetIds){
+                BakingAppWidget.updateAppWidget(this, appWidgetManager, id);
+            }
+
+        }
+    }
+
+    @Override
+    public void onError(String error) {
+        mBinding.loadingIndicator.setVisibility(View.INVISIBLE);
+        mBinding.emptyRecipesView.setVisibility(View.VISIBLE);
+        mBinding.rvRecipeList.setVisibility(View.GONE);
+        Toast.makeText(getApplicationContext(), getString(R.string.msg_error_internet), Toast.LENGTH_LONG).show();
+        Log.d(LOG_TAG, "Erro: " + error);
+    }
 }

@@ -1,5 +1,6 @@
 package com.example.android.bakingapp;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -22,7 +23,7 @@ import java.util.List;
  * Created by mateus on 16/06/17.
  */
 
-public class RecipeStepsFragment extends Fragment implements RecipeStepListAdapter.OnRecipeStepClickListener {
+public class RecipeStepsFragment extends Fragment {
 
     private FragmentRecipeStepsBinding mBinding;
 
@@ -31,6 +32,18 @@ public class RecipeStepsFragment extends Fragment implements RecipeStepListAdapt
     private RecipeStepListAdapter mStepsAdapter;
 
     private static final String LOG_TAG = "RecipeStepsFragment";
+
+    RecipeStepListAdapter.OnRecipeStepClickListener mListener;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try{
+            mListener = (RecipeStepListAdapter.OnRecipeStepClickListener) context;
+        }catch (ClassCastException e){
+            e.printStackTrace();
+        }
+    }
 
     @Nullable
     @Override
@@ -42,7 +55,7 @@ public class RecipeStepsFragment extends Fragment implements RecipeStepListAdapt
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         mBinding.rvStepsList.setLayoutManager(layoutManager);
 
-        mStepsAdapter = new RecipeStepListAdapter(this);
+        mStepsAdapter = new RecipeStepListAdapter(mListener);
         mBinding.rvStepsList.setAdapter(mStepsAdapter);
 
         List<Object> steps = new ArrayList<>();
@@ -54,18 +67,4 @@ public class RecipeStepsFragment extends Fragment implements RecipeStepListAdapt
         return mBinding.getRoot();
     }
 
-    @Override
-    public void onRecipeStepClick(int position) {
-        Intent intent;
-        if(position == 0){
-            //open ingredients fragment
-            intent = new Intent(getContext(), IngredientsActivity.class);
-            intent.putExtra(MainActivity.EXTRA_RECIPE, mRecipe);
-        }else{
-            intent = new Intent();
-            //open step details fragment
-        }
-        Log.d(LOG_TAG, "onRecipeStepClick: " + position);
-        startActivity(intent);
-    }
 }
