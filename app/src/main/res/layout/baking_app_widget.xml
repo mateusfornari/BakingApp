@@ -17,9 +17,9 @@
         android:layout_marginStart="@dimen/default_spacing"
         android:contentDescription="@string/appwidget_text"
         android:text="@string/appwidget_text"
-        android:textColor="@android:color/primary_text_light"
-        android:textSize="18sp"
-        android:textStyle="bold"
+        android:textColor="@color/text_primary"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-light"
         android:background="@color/cardview_light_background"
         android:elevation="@dimen/cardview_default_elevation"
         android:padding="@dimen/default_spacing"/>

@@ -36,6 +36,7 @@ public class IngredientsFragment extends Fragment {
 
         if(recipe != null){
             mIngredientsAdapter.swapIngredients(recipe.getIngredients());
+            getActivity().setTitle(recipe.getName());
         }
 
         return mBinding.getRoot();

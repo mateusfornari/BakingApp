@@ -37,9 +37,9 @@ public class RecipeStepListAdapter extends RecyclerView.Adapter<RecipeStepListAd
     public void onBindViewHolder(StepViewHolder holder, int position) {
         Object step = mSteps.get(position);
         if(step instanceof RecipeStep) {
-            holder.bind(((RecipeStep)step).getShortDescription());
+            holder.bindStep((RecipeStep)step);
         }else if(step instanceof String){
-            holder.bind((String)step);
+            holder.bindIngredient((String)step);
         }
     }
 
@@ -62,8 +62,17 @@ public class RecipeStepListAdapter extends RecyclerView.Adapter<RecipeStepListAd
             super(itemView);
         }
 
-        public void bind(String str){
+        public void bindIngredient(String str){
             mBinding.tvStepDescription.setText(str);
+            mBinding.ivStepPlayIcon.setVisibility(View.INVISIBLE);
+            mBinding.getRoot().setOnClickListener(this);
+        }
+
+        public void bindStep(RecipeStep step){
+            mBinding.tvStepDescription.setText(step.getShortDescription());
+            if(step.getVideoUrl().isEmpty()){
+                mBinding.ivStepPlayIcon.setVisibility(View.INVISIBLE);
+            }
             mBinding.getRoot().setOnClickListener(this);
         }
 

@@ -14,7 +14,9 @@
             android:id="@+id/tv_step_instructions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView" />
+            android:text="TextView"
+            android:textSize="18sp"
+            android:padding="@dimen/default_spacing"/>
 
     </LinearLayout>
 </layout>
