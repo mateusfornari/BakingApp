@@ -5,6 +5,10 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
+import android.support.test.espresso.IdlingResource;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,6 +24,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.android.bakingapp.adapters.RecipeListAdapter;
 import com.example.android.bakingapp.databinding.ActivityMainBinding;
 import com.example.android.bakingapp.domain.Recipe;
+import com.example.android.bakingapp.idling_resource.SimpleIdlingResource;
 import com.example.android.bakingapp.utilities.JsonUtils;
 import com.example.android.bakingapp.utilities.RecipeLoader;
 
@@ -42,11 +47,16 @@ public class MainActivity extends AppCompatActivity implements
 
     private ArrayList<Recipe> mRecipes;
 
+    @Nullable
+    private SimpleIdlingResource mIdlingResource;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+
+        getIdlingResource();
 
         LinearLayoutManager layoutManager = new GridLayoutManager(this, getResources().getInteger(R.integer.grid_columns));
         mBinding.rvRecipeList.setLayoutManager(layoutManager);
@@ -82,6 +92,9 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void loadRecipes(){
+        if(mIdlingResource != null) {
+            mIdlingResource.setIdleState(false);
+        }
         mBinding.loadingIndicator.setVisibility(View.VISIBLE);
         RecipeLoader loader = new RecipeLoader(this, this);
         loader.load();
@@ -106,6 +119,9 @@ public class MainActivity extends AppCompatActivity implements
             }
 
         }
+        if(mIdlingResource != null) {
+            mIdlingResource.setIdleState(true);
+        }
     }
 
     @Override
@@ -115,5 +131,17 @@ public class MainActivity extends AppCompatActivity implements
         mBinding.rvRecipeList.setVisibility(View.GONE);
         Toast.makeText(getApplicationContext(), getString(R.string.msg_error_internet), Toast.LENGTH_LONG).show();
         Log.d(LOG_TAG, "Erro: " + error);
+        if(mIdlingResource != null) {
+            mIdlingResource.setIdleState(true);
+        }
+    }
+
+    @VisibleForTesting
+    @NonNull
+    public IdlingResource getIdlingResource() {
+        if (mIdlingResource == null) {
+            mIdlingResource = new SimpleIdlingResource();
+        }
+        return mIdlingResource;
     }
 }

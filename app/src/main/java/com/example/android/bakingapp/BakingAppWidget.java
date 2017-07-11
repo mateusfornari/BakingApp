@@ -13,12 +13,15 @@ import android.widget.RemoteViews;
  */
 public class BakingAppWidget extends AppWidgetProvider {
     private static final String LOG_TAG = "BakingAppWidget";
+    public static final String EXTRA_WIDGET_ID = "extra_widget_id";
+
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
         Log.d(LOG_TAG, "updateAppWidget");
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.grid_widget);
         Intent intent = new Intent(context, BakingAppWidgetService.class);
+        intent.putExtra(EXTRA_WIDGET_ID, appWidgetId);
         views.setRemoteAdapter(R.id.widget_grid_view, intent);
         Intent contentIntent = new Intent(context, IngredientsActivity.class);
         PendingIntent pending = PendingIntent.getActivity(context, 0, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT);

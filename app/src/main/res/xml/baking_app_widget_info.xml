@@ -4,7 +4,7 @@
     android:initialLayout="@layout/grid_widget"
     android:minHeight="40dp"
     android:minWidth="110dp"
-    android:previewImage="@drawable/example_appwidget_preview"
+    android:previewImage="@drawable/widget_sample"
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="30000"
     android:widgetCategory="home_screen"></appwidget-provider>

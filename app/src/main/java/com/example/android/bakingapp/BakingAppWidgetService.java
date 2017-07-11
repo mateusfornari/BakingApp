@@ -4,14 +4,18 @@ import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import com.example.android.bakingapp.domain.Recipe;
 import com.example.android.bakingapp.utilities.RecipeLoader;
+import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -24,7 +28,8 @@ public class BakingAppWidgetService extends RemoteViewsService {
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
         Log.d(LOG_TAG, "OnGetViewFactory");
-        return new GridWidgetFactory(this.getApplicationContext());
+        int id = intent.getIntExtra(BakingAppWidget.EXTRA_WIDGET_ID, 0);
+        return new GridWidgetFactory(this.getApplicationContext(), id);
     }
 }
 
@@ -33,9 +38,10 @@ class GridWidgetFactory implements RemoteViewsService.RemoteViewsFactory{
     private static final String LOG_TAG = "GridWidgetFactory";
     private Context context;
     private ArrayList<Recipe> recipes;
-
-    public GridWidgetFactory(Context context){
+    private int widgetId;
+    public GridWidgetFactory(Context context, int widgetId){
         this.context = context;
+        this.widgetId = widgetId;
 
     }
     @Override
@@ -69,7 +75,19 @@ class GridWidgetFactory implements RemoteViewsService.RemoteViewsFactory{
         String name = recipe.getName();
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.baking_app_widget);
         views.setTextViewText(R.id.appwidget_text, name);
+        if(recipe.getImageUrl().isEmpty()){
+            views.setViewVisibility(R.id.iv_recipe_image, View.GONE);
+        }else {
 
+            try {
+                Bitmap bp = Picasso.with(context)
+                        .load(recipe.getImageUrl()).get();
+                views.setImageViewBitmap(R.id.iv_recipe_image, bp);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
         Bundle extras = new Bundle();
         extras.putParcelable(MainActivity.EXTRA_RECIPE, recipe);
         Intent fillIntent = new Intent();

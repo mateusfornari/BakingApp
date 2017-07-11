@@ -8,7 +8,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.android.bakingapp.R;
+import com.example.android.bakingapp.databinding.RecipeListItemBinding;
 import com.example.android.bakingapp.domain.Recipe;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -32,8 +34,10 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
     public RecipeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         mContext = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        View view = inflater.inflate(R.layout.recipe_list_item, parent, false);
-        return new RecipeViewHolder(view);
+        RecipeListItemBinding mBinding = RecipeListItemBinding.inflate(inflater);
+        RecipeViewHolder viewHolder = new RecipeViewHolder(mBinding.getRoot());
+        viewHolder.setmBinding(mBinding);
+        return viewHolder;
     }
 
     @Override
@@ -57,20 +61,29 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
 
     public class RecipeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private TextView mRecipeNameTextView;
-
         private Recipe mRecipe;
 
+        private RecipeListItemBinding mBinding;
 
         public RecipeViewHolder(View itemView) {
             super(itemView);
-            mRecipeNameTextView = (TextView)itemView.findViewById(R.id.tv_recipe_name);
             itemView.setOnClickListener(this);
+        }
+
+        public void setmBinding(RecipeListItemBinding mBinding) {
+            this.mBinding = mBinding;
         }
 
         public void bind(Recipe recipe){
             mRecipe = recipe;
-            mRecipeNameTextView.setText(recipe.getName());
+            mBinding.tvRecipeName.setText(recipe.getName());
+            mBinding.tvRecipeServings.setText(
+                    mContext.getString(R.string.a11y_servings, String.valueOf(recipe.getServings())));
+            if(recipe.getImageUrl().isEmpty()){
+                mBinding.ivRecipeImage.setVisibility(View.GONE);
+            }else{
+                Picasso.with(mContext).load(recipe.getImageUrl()).into(mBinding.ivRecipeImage);
+            }
         }
 
         @Override

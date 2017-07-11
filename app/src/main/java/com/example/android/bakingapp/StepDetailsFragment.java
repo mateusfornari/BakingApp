@@ -1,5 +1,6 @@
 package com.example.android.bakingapp;
 
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 
 import com.example.android.bakingapp.databinding.FragmentStepDetailsBinding;
 import com.example.android.bakingapp.domain.RecipeStep;
@@ -40,9 +42,6 @@ public class StepDetailsFragment extends Fragment {
 
     private SimpleExoPlayer player;
 
-    private int windowIndex;
-    private long position;
-
     public void setStep(RecipeStep step) {
         this.step = step;
     }
@@ -54,8 +53,6 @@ public class StepDetailsFragment extends Fragment {
 
         if(savedInstanceState != null){
             step = savedInstanceState.getParcelable(BUNDLE_STEP);
-            windowIndex = savedInstanceState.getInt(BUNDLE_WINDOW_INDEX, 0);
-            position = savedInstanceState.getLong(BUNDLE_POSITION, 0);
         }
 
         if(step != null && mBinding.tvStepInstructions != null) {
@@ -107,7 +104,6 @@ public class StepDetailsFragment extends Fragment {
             player = ExoPlayerFactory.newSimpleInstance(getActivity(), selector, control);
             mBinding.exoVideoView.setPlayer(player);
             player.prepare(mediaSource, true, false);
-            player.seekTo(this.windowIndex, this.position);
             player.setPlayWhenReady(true);
 
         }
@@ -129,4 +125,6 @@ public class StepDetailsFragment extends Fragment {
         Log.d(LOG_TAG, "Position: " + player.getCurrentWindowIndex() + "  " + player.getCurrentPosition());
         super.onSaveInstanceState(outState);
     }
+
+
 }

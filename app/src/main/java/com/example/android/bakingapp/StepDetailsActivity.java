@@ -1,13 +1,16 @@
 package com.example.android.bakingapp;
 
+import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.WindowManager;
 
 import com.example.android.bakingapp.databinding.ActivityStepDetailsBinding;
 import com.example.android.bakingapp.domain.Recipe;
+import com.example.android.bakingapp.domain.RecipeStep;
 
 public class StepDetailsActivity extends AppCompatActivity {
 
@@ -38,6 +41,7 @@ public class StepDetailsActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     startStepFragment(++stepPosition);
                     updateButtons();
+                    fullScreen();
                 }
             });
         }
@@ -47,9 +51,16 @@ public class StepDetailsActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     startStepFragment(--stepPosition);
                     updateButtons();
+                    fullScreen();
                 }
             });
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fullScreen();
     }
 
     private void startStepFragment(int position){
@@ -84,5 +95,33 @@ public class StepDetailsActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(BUNDLE_POSITION, this.stepPosition);
         super.onSaveInstanceState(outState);
+    }
+
+    private void fullScreen(){
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            if(stepPosition >= 0) {
+                RecipeStep step = mRecipe.getSteps().get(stepPosition);
+                if (!step.getVideoUrl().isEmpty()) {
+                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                    mBinding.btNextStep.setVisibility(View.GONE);
+                    mBinding.btPreviousStep.setVisibility(View.GONE);
+                    getSupportActionBar().hide();
+                    mBinding.stepDetailsFragment.setSystemUiVisibility(
+                            View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+                }
+            }
+        }else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            updateButtons();
+            getSupportActionBar().show();
+            mBinding.stepDetailsFragment.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        fullScreen();
     }
 }
