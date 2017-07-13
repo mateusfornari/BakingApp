@@ -57,6 +57,7 @@ public class StepDetailsFragment extends Fragment {
 
         if(step != null && mBinding.tvStepInstructions != null) {
             mBinding.tvStepInstructions.setText(step.getDescription());
+            mBinding.tvStepTitle.setText(step.getShortDescription());
         }
 
         return mBinding.getRoot();

@@ -77,6 +77,8 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
         public void bind(Recipe recipe){
             mRecipe = recipe;
             mBinding.tvRecipeName.setText(recipe.getName());
+            mBinding.tvRecipeName.setContentDescription(
+                    mContext.getString(R.string.a11y_recipe, recipe.getName()));
             mBinding.tvRecipeServings.setText(
                     mContext.getString(R.string.a11y_servings, String.valueOf(recipe.getServings())));
             if(recipe.getImageUrl().isEmpty()){

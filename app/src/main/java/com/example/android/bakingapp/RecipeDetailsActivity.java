@@ -1,6 +1,7 @@
 package com.example.android.bakingapp;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -60,5 +61,10 @@ public class RecipeDetailsActivity extends AppCompatActivity implements RecipeSt
             FragmentManager manager = getSupportFragmentManager();
             manager.beginTransaction().replace(R.id.step_datails_content, fragment).commit();
         }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
     }
 }
