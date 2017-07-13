@@ -2,11 +2,14 @@
 <resources>
     <color name="colorPrimary">#ff9800</color>
     <color name="colorPrimaryDark">#ff6d00</color>
+    <color name="colorPrimaryLight">#ffd180</color>
     <color name="colorAccent">#2196f3</color>
+
 
     <color name="widget_grid_background">#66FFFFFF</color>
     <color name="widget_grid_title_background">#66000000</color>
     <color name="divider">#CFCFCF</color>
     <color name="text_primary">#333</color>
     <color name="white">#ffffff</color>
+
 </resources>

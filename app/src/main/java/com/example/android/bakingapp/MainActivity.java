@@ -35,7 +35,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements
         RecipeListAdapter.OnRecipeClickListener,
-        RecipeLoader.OnLoadListener{
+        RecipeLoader.OnLoadListener,
+        View.OnClickListener{
 
     private static final String LOG_TAG = "MainActivity";
 
@@ -63,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements
 
         mRecipeAdapter = new RecipeListAdapter(this);
         mBinding.rvRecipeList.setAdapter(mRecipeAdapter);
-
+        mBinding.fabRefresh.setOnClickListener(this);
         if(savedInstanceState != null && savedInstanceState.containsKey(BUNDLE_RECIPES)){
             Log.d(LOG_TAG, "There is saved instance state");
             mRecipes = savedInstanceState.getParcelableArrayList(BUNDLE_RECIPES);
@@ -143,5 +144,11 @@ public class MainActivity extends AppCompatActivity implements
             mIdlingResource = new SimpleIdlingResource();
         }
         return mIdlingResource;
+    }
+
+    @Override
+    public void onClick(View v) {
+        mBinding.emptyRecipesView.setVisibility(View.GONE);
+        loadRecipes();
     }
 }

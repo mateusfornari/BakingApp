@@ -48,7 +48,7 @@ public class MainActivityTest {
         onView(withId(R.id.rv_steps_list))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
-
+        onView(withId(R.id.rv_ingredients_list));
     }
 
     @After

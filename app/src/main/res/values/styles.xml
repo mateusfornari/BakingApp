@@ -8,4 +8,13 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="ActionBar.Solid.BakingApp.NoTitle" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="displayOptions">useLogo|showHome</item>
+        <item name="logo">@drawable/ic_logo</item>
+        <item name="logoDescription">@string/app_name</item>
+    </style>
+
+    <style name="AppTheme.BakingApp" parent="@style/AppTheme">
+        <item name="actionBarStyle">@style/ActionBar.Solid.BakingApp.NoTitle</item>
+    </style>
 </resources>

@@ -27,6 +27,10 @@ public class RecipeDetailsActivity extends AppCompatActivity implements RecipeSt
         mRecipe = getIntent().getParcelableExtra(MainActivity.EXTRA_RECIPE);
 
         setTitle(mRecipe.getName());
+
+        if(isTablet) {
+            onIngredientsClick();
+        }
     }
 
     @Override
