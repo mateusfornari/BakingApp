@@ -25,6 +25,7 @@ import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by mateus on 18/06/17.
@@ -33,8 +34,6 @@ import com.google.android.exoplayer2.util.Util;
 public class StepDetailsFragment extends Fragment {
 
     private static final String BUNDLE_STEP = "bundle_step";
-    private static final String BUNDLE_WINDOW_INDEX = "bundle_window_position";
-    private static final String BUNDLE_POSITION = "bundle_position";
     private static final String LOG_TAG = "StepDetailsFragment";
     private FragmentStepDetailsBinding mBinding;
 
@@ -65,25 +64,38 @@ public class StepDetailsFragment extends Fragment {
 
     @Override
     public void onStart() {
+        Log.d(LOG_TAG, "onStart");
         super.onStart();
         initializePlayer();
+        showImage();
     }
 
     @Override
     public void onResume() {
+        Log.d(LOG_TAG, "onResume");
         super.onResume();
         initializePlayer();
+        showImage();
     }
 
     @Override
     public void onStop() {
+        Log.d(LOG_TAG, "onStop");
         super.onStop();
-        releasePlayer();
+//        releasePlayer();
     }
 
     @Override
     public void onPause() {
+        Log.d(LOG_TAG, "onPause");
         super.onPause();
+//        releasePlayer();
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.d(LOG_TAG, "onDestroy");
+        super.onDestroy();
         releasePlayer();
     }
 
@@ -114,6 +126,7 @@ public class StepDetailsFragment extends Fragment {
     private void releasePlayer(){
         if(player != null){
             player.release();
+            player = null;
         }
     }
 
@@ -121,11 +134,15 @@ public class StepDetailsFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(BUNDLE_STEP, step);
-        outState.putInt(BUNDLE_WINDOW_INDEX, player.getCurrentWindowIndex());
-        outState.putLong(BUNDLE_POSITION, player.getCurrentPosition());
-        Log.d(LOG_TAG, "Position: " + player.getCurrentWindowIndex() + "  " + player.getCurrentPosition());
         super.onSaveInstanceState(outState);
     }
 
+    private void showImage(){
+        if(this.step.getThumbnailUrl().isEmpty()){
+            mBinding.ivStepThumbnail.setVisibility(View.GONE);
+        }else{
+            Picasso.with(getContext()).load(this.step.getThumbnailUrl()).into(mBinding.ivStepThumbnail);
+        }
+    }
 
 }

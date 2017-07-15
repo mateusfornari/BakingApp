@@ -64,6 +64,11 @@ public class RecipeDetailsActivity extends AppCompatActivity implements RecipeSt
     }
 
     @Override
+    public boolean isTablet() {
+        return isTablet;
+    }
+
+    @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
     }

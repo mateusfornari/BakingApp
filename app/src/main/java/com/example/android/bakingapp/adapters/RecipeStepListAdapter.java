@@ -16,6 +16,8 @@ import java.util.List;
 
 public class RecipeStepListAdapter extends RecyclerView.Adapter<RecipeStepListAdapter.StepViewHolder> {
 
+    private int lastSelected = -1;
+
     private List<Object> mSteps;
 
     private OnRecipeStepClickListener recipeStepClickListener;
@@ -40,6 +42,9 @@ public class RecipeStepListAdapter extends RecyclerView.Adapter<RecipeStepListAd
             holder.bindStep((RecipeStep)step);
         }else if(step instanceof String){
             holder.bindIngredient((String)step);
+        }
+        if(recipeStepClickListener != null && recipeStepClickListener.isTablet()) {
+            holder.itemView.setSelected(position == lastSelected);
         }
     }
 
@@ -82,6 +87,9 @@ public class RecipeStepListAdapter extends RecyclerView.Adapter<RecipeStepListAd
 
         @Override
         public void onClick(View v) {
+            notifyItemChanged(lastSelected);
+            lastSelected = getAdapterPosition();
+            notifyItemChanged(lastSelected);
             if(recipeStepClickListener != null){
                 Object step = mSteps.get(getAdapterPosition());
                 if(step instanceof RecipeStep) {
@@ -96,5 +104,6 @@ public class RecipeStepListAdapter extends RecyclerView.Adapter<RecipeStepListAd
     public interface OnRecipeStepClickListener{
         void onRecipeStepClick(RecipeStep step);
         void onIngredientsClick();
+        boolean isTablet();
     }
 }
