@@ -16,22 +16,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.android.bakingapp.adapters.RecipeListAdapter;
 import com.example.android.bakingapp.databinding.ActivityMainBinding;
 import com.example.android.bakingapp.domain.Recipe;
 import com.example.android.bakingapp.idling_resource.SimpleIdlingResource;
-import com.example.android.bakingapp.utilities.JsonUtils;
 import com.example.android.bakingapp.utilities.RecipeLoader;
 
-import org.json.JSONArray;
-
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements
         RecipeListAdapter.OnRecipeClickListener,

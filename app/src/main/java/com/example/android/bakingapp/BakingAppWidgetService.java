@@ -1,7 +1,5 @@
 package com.example.android.bakingapp;
 
-import android.appwidget.AppWidgetManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -39,7 +37,7 @@ class GridWidgetFactory implements RemoteViewsService.RemoteViewsFactory{
     private Context context;
     private ArrayList<Recipe> recipes;
     private int widgetId;
-    public GridWidgetFactory(Context context, int widgetId){
+    GridWidgetFactory(Context context, int widgetId){
         this.context = context;
         this.widgetId = widgetId;
 

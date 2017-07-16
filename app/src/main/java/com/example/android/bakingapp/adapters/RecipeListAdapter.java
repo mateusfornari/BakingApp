@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.example.android.bakingapp.R;
 import com.example.android.bakingapp.databinding.RecipeListItemBinding;
@@ -59,18 +58,18 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
 
 
 
-    public class RecipeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class RecipeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private Recipe mRecipe;
 
         private RecipeListItemBinding mBinding;
 
-        public RecipeViewHolder(View itemView) {
+        RecipeViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
         }
 
-        public void setmBinding(RecipeListItemBinding mBinding) {
+        void setmBinding(RecipeListItemBinding mBinding) {
             this.mBinding = mBinding;
         }
 

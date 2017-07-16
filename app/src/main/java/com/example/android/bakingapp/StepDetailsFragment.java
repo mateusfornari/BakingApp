@@ -1,6 +1,5 @@
 package com.example.android.bakingapp;
 
-import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,7 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 
 import com.example.android.bakingapp.databinding.FragmentStepDetailsBinding;
 import com.example.android.bakingapp.domain.RecipeStep;
@@ -82,14 +80,13 @@ public class StepDetailsFragment extends Fragment {
     public void onStop() {
         Log.d(LOG_TAG, "onStop");
         super.onStop();
-//        releasePlayer();
     }
 
     @Override
     public void onPause() {
         Log.d(LOG_TAG, "onPause");
         super.onPause();
-//        releasePlayer();
+        playerPause();
     }
 
     @Override
@@ -97,6 +94,12 @@ public class StepDetailsFragment extends Fragment {
         Log.d(LOG_TAG, "onDestroy");
         super.onDestroy();
         releasePlayer();
+    }
+
+    public void playerPause(){
+        if(player != null){
+            player.setPlayWhenReady(false);
+        }
     }
 
     private void initializePlayer(){
@@ -119,6 +122,8 @@ public class StepDetailsFragment extends Fragment {
             player.prepare(mediaSource, true, false);
             player.setPlayWhenReady(true);
 
+        }else{
+            player.setPlayWhenReady(true);
         }
 
     }

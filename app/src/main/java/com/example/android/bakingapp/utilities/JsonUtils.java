@@ -90,9 +90,6 @@ public class JsonUtils {
         step.setShortDescription(json.getString(FIELD_STEP_SHORT_DESCRIPTION));
         step.setThumbnailUrl(json.getString(FIELD_STEP_THUMBNAIL));
         step.setVideoUrl(json.getString(FIELD_STEP_VIDEO));
-        if(step.getVideoUrl().isEmpty() && step.getThumbnailUrl().isEmpty()){
-            step.setThumbnailUrl("http://www.recipeboy.com/wp-content/uploads/2016/09/No-Bake-Nutella-Pie.jpg");
-        }
     }
 
 }
