@@ -11,5 +11,6 @@
     <string name="a11y_servings">Servings: <xliff:g id="servings">%1$s</xliff:g></string>
     <string name="a11y_recipe">Recipe: <xliff:g id="recipe">%1$s</xliff:g></string>
     <string name="ingredients">Ingredients</string>
+    <string name="pref_desired_recipe">desired_recipe_id</string>
 
 </resources>

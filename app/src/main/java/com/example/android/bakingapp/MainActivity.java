@@ -3,6 +3,7 @@ package com.example.android.bakingapp;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -33,6 +34,8 @@ public class MainActivity extends AppCompatActivity implements
 
     private static final String BUNDLE_RECIPES = "bundle_recipes";
     public static final String EXTRA_RECIPE = "extra_recipe";
+    public static final String SHARED_PREFERENCES_NAME = "bakingapp_shared_preferences";
+
     private ActivityMainBinding mBinding;
 
     private RecipeListAdapter mRecipeAdapter;
@@ -72,6 +75,8 @@ public class MainActivity extends AppCompatActivity implements
         Log.d(LOG_TAG, "OnRecipeClick: " + recipe.getName());
         Intent intent = new Intent(this, RecipeDetailsActivity.class);
         intent.putExtra(EXTRA_RECIPE, recipe);
+        saveDesiredRecipe(recipe.getId());
+        notifyWidget();
         startActivity(intent);
     }
 
@@ -142,4 +147,17 @@ public class MainActivity extends AppCompatActivity implements
         mBinding.emptyRecipesView.setVisibility(View.GONE);
         loadRecipes();
     }
+
+    private void notifyWidget(){
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this, BakingAppWidget.class));
+        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_grid_view);
+    }
+
+    private void saveDesiredRecipe(int id){
+        SharedPreferences.Editor editor = getSharedPreferences(SHARED_PREFERENCES_NAME, MODE_PRIVATE).edit();
+        editor.putInt(getString(R.string.pref_desired_recipe), id);
+        editor.commit();
+    }
+
 }

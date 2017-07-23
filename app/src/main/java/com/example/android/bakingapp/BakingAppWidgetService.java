@@ -2,6 +2,7 @@ package com.example.android.bakingapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,12 +10,14 @@ import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
+import com.example.android.bakingapp.domain.Ingredient;
 import com.example.android.bakingapp.domain.Recipe;
 import com.example.android.bakingapp.utilities.RecipeLoader;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by mateus on 01/07/17.
@@ -36,11 +39,18 @@ class GridWidgetFactory implements RemoteViewsService.RemoteViewsFactory{
     private static final String LOG_TAG = "GridWidgetFactory";
     private Context context;
     private ArrayList<Recipe> recipes;
+    private List<Ingredient> ingredients;
+    private Recipe recipe;
     private int widgetId;
     GridWidgetFactory(Context context, int widgetId){
         this.context = context;
         this.widgetId = widgetId;
 
+    }
+
+    private int getDesiredRecipeId(){
+        SharedPreferences preferences = context.getSharedPreferences(MainActivity.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        return preferences.getInt(context.getString(R.string.pref_desired_recipe), 1);
     }
     @Override
     public void onCreate() {
@@ -53,6 +63,17 @@ class GridWidgetFactory implements RemoteViewsService.RemoteViewsFactory{
         Log.d(LOG_TAG, "onDataSetChanged");
         RecipeLoader loader = new RecipeLoader(context, null);
         this.recipes = loader.loadSync();
+        if(this.recipes != null) {
+            int id = getDesiredRecipeId();
+            for(Recipe r : this.recipes) {
+                Log.d(LOG_TAG, "ID: " + id + "/" + r.getId());
+                if(r.getId() == id) {
+                    this.recipe = r;
+                    this.ingredients = r.getIngredients();
+                    break;
+                }
+            }
+        }
     }
 
     @Override
@@ -63,35 +84,28 @@ class GridWidgetFactory implements RemoteViewsService.RemoteViewsFactory{
     @Override
     public int getCount() {
         Log.d(LOG_TAG, "getCount");
-        if(this.recipes != null) return this.recipes.size();
+        if(this.ingredients != null){
+            Log.d(LOG_TAG, "Count: " + this.ingredients.size());
+            return this.ingredients.size();
+        }
         return 0;
     }
 
     @Override
     public RemoteViews getViewAt(int position) {
-        Recipe recipe = recipes.get(position);
-        String name = recipe.getName();
+        Log.d(LOG_TAG, "Position: " + position);
+        Ingredient ingredient = this.ingredients.get(position);
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.baking_app_widget);
-        views.setTextViewText(R.id.appwidget_text, name);
-        if(recipe.getImageUrl().isEmpty()){
-            views.setViewVisibility(R.id.iv_recipe_image, View.GONE);
-        }else {
-
-            try {
-                Bitmap bp = Picasso.with(context)
-                        .load(recipe.getImageUrl()).get();
-                views.setImageViewBitmap(R.id.iv_recipe_image, bp);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
+        if(position == 0){
+            views.setViewVisibility(R.id.tv_recipe_name, View.VISIBLE);
+            views.setTextViewText(R.id.tv_recipe_name, recipe.getName());
+        }else{
+            views.setViewVisibility(R.id.tv_recipe_name, View.GONE);
         }
-        Bundle extras = new Bundle();
-        extras.putParcelable(MainActivity.EXTRA_RECIPE, recipe);
-        Intent fillIntent = new Intent();
-        fillIntent.putExtras(extras);
+        views.setTextViewText(R.id.tv_ingredient_quantity, String.valueOf(ingredient.getQuantity()));
+        views.setTextViewText(R.id.tv_ingredient_measure, ingredient.getMeasure());
+        views.setTextViewText(R.id.tv_ingredient_description, ingredient.getDescription());
 
-        views.setOnClickFillInIntent(R.id.appwidget_text, fillIntent);
         return views;
     }
 

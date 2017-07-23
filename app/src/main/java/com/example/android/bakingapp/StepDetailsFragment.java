@@ -80,6 +80,7 @@ public class StepDetailsFragment extends Fragment {
     public void onStop() {
         Log.d(LOG_TAG, "onStop");
         super.onStop();
+        releasePlayer();
     }
 
     @Override
@@ -87,13 +88,6 @@ public class StepDetailsFragment extends Fragment {
         Log.d(LOG_TAG, "onPause");
         super.onPause();
         playerPause();
-    }
-
-    @Override
-    public void onDestroy() {
-        Log.d(LOG_TAG, "onDestroy");
-        super.onDestroy();
-        releasePlayer();
     }
 
     public void playerPause(){
