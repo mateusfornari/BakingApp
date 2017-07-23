@@ -34,7 +34,7 @@ public class StepDetailsActivity extends AppCompatActivity {
         startStepFragment(stepPosition);
 
         updateButtons();
-
+        fullScreen();
         if(mBinding.btNextStep != null) {
             mBinding.btNextStep.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -119,9 +119,5 @@ public class StepDetailsActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        fullScreen();
-    }
+
 }

@@ -19,11 +19,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RecipeDetailsActivity"
-            android:configChanges="orientation|screenSize"/>
+        <activity android:name=".RecipeDetailsActivity"/>
         <activity android:name=".IngredientsActivity" />
-        <activity android:name=".StepDetailsActivity"
-            android:configChanges="orientation|screenSize"/>
+        <activity android:name=".StepDetailsActivity"/>
 
         <receiver android:name=".BakingAppWidget">
             <intent-filter>

@@ -33,12 +33,14 @@ public class StepDetailsFragment extends Fragment {
 
     private static final String BUNDLE_STEP = "bundle_step";
     private static final String LOG_TAG = "StepDetailsFragment";
+    private static final String BUNDLE_PLAYER_POSITION = "bundle_player_position";
     private FragmentStepDetailsBinding mBinding;
 
     private RecipeStep step;
 
     private SimpleExoPlayer player;
 
+    private long playerPosition = 0;
     public void setStep(RecipeStep step) {
         this.step = step;
     }
@@ -50,6 +52,7 @@ public class StepDetailsFragment extends Fragment {
 
         if(savedInstanceState != null){
             step = savedInstanceState.getParcelable(BUNDLE_STEP);
+            playerPosition = savedInstanceState.getLong(BUNDLE_PLAYER_POSITION);
         }
 
         if(step != null && mBinding.tvStepInstructions != null) {
@@ -114,6 +117,7 @@ public class StepDetailsFragment extends Fragment {
             player = ExoPlayerFactory.newSimpleInstance(getActivity(), selector, control);
             mBinding.exoVideoView.setPlayer(player);
             player.prepare(mediaSource, true, false);
+            player.seekTo(playerPosition);
             player.setPlayWhenReady(true);
 
         }else{
@@ -133,6 +137,9 @@ public class StepDetailsFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(BUNDLE_STEP, step);
+        if(player != null) {
+            outState.putLong(BUNDLE_PLAYER_POSITION, player.getCurrentPosition());
+        }
         super.onSaveInstanceState(outState);
     }
 

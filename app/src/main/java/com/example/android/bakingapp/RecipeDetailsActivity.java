@@ -29,7 +29,7 @@ public class RecipeDetailsActivity extends AppCompatActivity implements RecipeSt
 
         setTitle(mRecipe.getName());
 
-        if(isTablet) {
+        if(isTablet && savedInstanceState == null) {
             onIngredientsClick();
         }
     }
@@ -68,8 +68,5 @@ public class RecipeDetailsActivity extends AppCompatActivity implements RecipeSt
         return isTablet;
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-    }
+
 }
